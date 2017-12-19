@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这个文件中编写sql语句 -->
+<!-- xml 可以作为配置文件。 -->
+<mapper namespace="com.gzyz.mapper.goods.AddGoodsMapper">
+	<!--resultMap  -->
+	<resultMap  type="spec_es" id="specMapper">
+		<id column="spec_id" property="spec_id"/>
+		<result column="spec_name" property="spec_name"/>
+		<collection property="spec_info" ofType="spec_info">
+				<id column="spec_info_id" property="spec_info_id"/>
+				<result column="spec_info_value" property="spec_info_value"/>
+		</collection>
+	</resultMap>
+
+
+
+
+	<!-- //添加商品 -->
+	<insert id="addGoods" parameterType="com.gzyz.bean.goods.Goods">
+			<!--cat_id取值于category的cat_id  -->
+			<!--brand_id取值于brand的brand_id  -->
+			INSERT INTO goods (cat_id,  goods_sn, goods_name, brand_id, goods_number, goods_weight, original_price, shop_price, keywords, goods_brief, goods_desc, original_img, show_in_recyc, is_shelves,details_img) 
+			VALUES (#{cat_id},#{goods_sn},#{goods_name},#{brand_id},#{goods_number},#{goods_weight},#{original_price},#{shop_price},#{keywords},#{goods_brief},	#{goods_desc},#{original_img},#{show_in_recyc},#{is_shelves},#{details_img})
+	</insert>
+	<select id="selectgoodsid" resultType="int"  parameterType="String">
+		select goods_id from goods where goods_sn=#{goods_sn}
+	</select>
+	
+	<select id="selectbrand" resultType="com.gzyz.bean.goods.Brand">
+		select * from brand
+	</select>
+	<insert id="addBrand" parameterType="com.gzyz.bean.goods.Brand">
+		INSERT INTO brand (brand_name,brand_logo,brand_desc)
+		VALUES (#{brand_name},#{brand_logo},#{brand_desc})
+	</insert>
+	
+	<select id="selectcategory" resultType="com.gzyz.bean.goods.Category">
+		select * from category
+	</select>
+	<insert id="addCategory" parameterType="com.gzyz.bean.goods.Category">
+		INSERT INTO category (cat_name,keywords,cat_desc,show_in_nav,sort_order)
+		VALUES (#{cat_name},#{keywords},#{cat_desc},#{show_in_nav},#{sort_order})
+	</insert>
+	
+	<select id="selectspec" resultMap="specMapper">
+		select s.spec_id spec_id,s.spec_name spec_name,si.spec_info_id spec_info_id,si.spec_info_value spec_info_value
+		from spec s
+		join spec_info si
+		on s.spec_id = si.spec_id
+	</select>
+	<insert id="addSpec" parameterType="String">
+		INSERT INTO spec (spec_name) VALUES (#{spec_name})
+	</insert>
+	<insert id="addSpec_info" parameterType="com.gzyz.bean.goods.Spec_info">
+		INSERT INTO spec_info (spec_id,spec_info_value) VALUES (#{spec_id},#{spec_info_value})
+	</insert>
+	
+	<select id="selectspecid" resultType="int"  parameterType="String">
+		select spec_id from spec where spec_name=#{spec_name}
+	</select>
+	<insert id="addGoods_spec" parameterType="com.gzyz.bean.goods.Goods_spec">
+		INSERT INTO goods_spec (goods_id,spec_info_id) VALUES (#{goods_id},#{spec_info_id})
+	</insert>
+	<select id="selectgoods_sn" resultType="String"  parameterType="String">
+		select goods_sn from goods where goods_sn=#{goods_sn}
+	</select>
+	<select id="selectbrand_name" resultType="String"  parameterType="String">
+		select brand_name from brand where brand_name=#{brand_name}
+	</select>
+	<select id="selectcat_name" resultType="String"  parameterType="String">
+		select cat_name from category where cat_name=#{cat_name}
+	</select>
+	<select id="selectspec_name" resultType="String"  parameterType="String">
+		select spec_name from spec where spec_name=#{spec_name}
+	</select>
+	<delete id="delectspec" parameterType="int">
+		delete from spec where spec_id=#{id}
+	</delete>
+	<delete id="delectspec_info" parameterType="int">
+		DELETE FROM spec_info WHERE spec_id =#{id}
+	</delete>
+	<delete id="delectgoods_spec" parameterType="int">
+		DELETE from goods_spec WHERE spec_info_id IN(
+		select spec_info_id from spec_info where spec_id = #{id}
+		)
+	</delete>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.systemset.LinksMapper">
+	
+	<select id="findLinksList" parameterType="com.gzyz.bean.systemset.Links" resultType="com.gzyz.bean.systemset.Links">
+  		SELECT * FROM links  
+  		<where>
+  			<include refid="query_links_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="findLinks" parameterType="com.gzyz.bean.systemset.Links" resultType="com.gzyz.bean.systemset.Links">
+  		SELECT * FROM links  
+  		<where>
+  			<include refid="query_links_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="deleteLinks" parameterType="com.gzyz.bean.systemset.Links">
+  		DELETE FROM links   
+  		<where>
+  			<include refid="query_links_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="updataLinks" parameterType="com.gzyz.bean.systemset.Links">
+  		update links set links_name = #{links_name},links_http = #{links_http} where links_id = #{links_id}; 
+  	</select>
+  	
+  	<select id="addLinks" parameterType="com.gzyz.bean.systemset.Links">
+  		<!-- insert into links values (#{links_id},#{links_name},#{links_http}); -->
+  		insert into links values (links_id,#{links_name},#{links_http});
+  	</select>
+  	
+  	<sql id="query_links_where">
+		<if test="links_id!=null and links_id!=''">
+			and  links_id = #{links_id}
+		</if>
+  		<if test="links_name!=null and links_name!=''">
+   			and links_name = #{links_name}
+   		</if>
+   		<if test="links_http!=null and links_http!=''">
+   			and links_http = #{links_http}
+   		</if>	
+   </sql>
+	
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.systemset.PostWayMapper">
+	
+	<select id="findPostWayList" parameterType="com.gzyz.bean.systemset.PostWay" resultType="com.gzyz.bean.systemset.PostWay">
+  		SELECT * FROM postway  
+  		<where>
+  			<include refid="query_postway_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="findPostWay" parameterType="com.gzyz.bean.systemset.PostWay" resultType="com.gzyz.bean.systemset.PostWay">
+  		SELECT * FROM postway  
+  		<where>
+  			<include refid="query_postway_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="deletePostWay" parameterType="com.gzyz.bean.systemset.PostWay">
+  		DELETE FROM postway   
+  		<where>
+  			<include refid="query_postway_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="updataPostWay" parameterType="com.gzyz.bean.systemset.PostWay">
+  		update postway set postway_name = #{postway_name} where postway_id = #{postway_id}; 
+  	</select>
+  	
+  	<select id="addPostWay" parameterType="com.gzyz.bean.systemset.PostWay">
+  		<!-- insert into postway values (#{postway_id},#{postway_name},#{postway_http}); -->
+  		insert into postway values (postway_id,#{postway_name});
+  	</select>
+  	
+  	<sql id="query_postway_where">
+		<if test="postway_id!=null and postway_id!=''">
+			and  postway_id = #{postway_id}
+		</if>
+  		<if test="postway_name!=null and postway_name!=''">
+   			and postway_name = #{postway_name}
+   		</if>	
+   </sql>
+	
+</mapper>

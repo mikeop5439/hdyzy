@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.introduction.IntroductionMapper">
+
+<!-- 
+
+商品评论列表显示所有信息
+
+ -->
+<resultMap type="getspecinfoid" id="getSpecInfoId">
+	<id column="gsid" property="goods_spec_id" />
+	<result column="siid" property="spec_info_id" />
+</resultMap>
+	
+	<select id="getSpecInfoId" parameterType="int" resultMap="getSpecInfoId">
+		select spec_info_id siid,goods_spec_id gsid
+		from `goods_spec`
+		where goods_id = ${goods_id}
+	</select>
+	
+	<select id="getSpecId" parameterType="int" resultType="int">
+		select spec_id sid
+		from spec_info
+		where spec_info_id = ${spec_info_id}
+	</select>
+	
+	<select id="getSpecName" parameterType="int" resultType="string">
+		select spec_name sname
+		from spec
+		where spec_id = ${spec_id}
+	</select>
+	
+	<select id="getSpecInfoValue" parameterType="int" resultType="string">
+		select spec_info_value siv
+		from spec_info
+		where spec_info_id = ${spec_info_id}
+	</select>
+	
+<resultMap type="goodsinfo" id="getGoodsInfo">
+	<id column="gid" property="goods_id" />
+	<result column="gname" property="goods_name" />
+	<result column="gnum" property="goods_number" />
+	<result column="op" property="original_price" />
+	<result column="sp" property="shop_price" />
+	<result column="gd" property="goods_desc" />
+	<result column="oi" property="original_img" />
+	<result column="di" property="details_img" />
+</resultMap>
+	
+	<select id="getGoodsInfo" parameterType="int" resultMap="getGoodsInfo">
+		select goods_name gname,goods_number gnum,original_price op,shop_price sp,
+			   goods_desc gd,original_img oi,goods_id gid,details_img di
+		from `goods`
+		where goods_id = ${goods_id}
+	</select>
+	
+	<select id="getInfoId" parameterType="int" resultType="int">
+		select spec_info_id inid
+		from `goods_spec`
+		where goods_id = ${goods_id}
+	</select>
+	
+	<select id="getGoodsKey" parameterType="int" resultType="string">
+		select keywords
+		from `goods`
+		where goods_id = ${goods_id}
+	</select>
+	
+<resultMap type="relatedgoods" id="getRelatedGoods">
+	<id column="gid" property="goods_id" />
+	<result column="gname" property="goods_name" />
+	<result column="sp" property="shop_price" />
+	<result column="oimg" property="original_img" />
+</resultMap>
+	
+	<select id="getRelatedGoods" parameterType="RelatedGoodsKey" resultMap="getRelatedGoods">
+		select goods_id gid,goods_name gname,shop_price sp,original_img oimg
+		from goods
+		where keywords = #{keywords}
+		limit #{firstnum},#{secondnum}
+	</select>
+	
+	<select id="getRelatedGoodsCount" parameterType="string" resultType="int">
+		select count(*)
+		from goods
+		where keywords = #{keywords}
+	</select>
+	
+	<select id="countComment" parameterType="int" resultType="int">
+		select count(*)
+		from comment
+	</select>
+	
+<resultMap type="commentinfo" id="getCommentInfo">
+	<id column="cid" property="comment_id" />
+	<result column="uname" property="user_name" />
+	<result column="c" property="content" />
+	<result column="cr" property="comment_rank" />
+	<result column="atime" property="formatDateString" />
+</resultMap>
+	
+	<select id="getCommentInfo" parameterType="int" resultMap="getCommentInfo">
+		select comment_id cid,user_name uname,content c,comment_rank cr,add_time atime
+		from `comment`
+		where goods_id = ${goods_id}
+	</select>
+	
+	<select id="getCommentInfoByPage" parameterType="CommentInfoByPage" resultMap="getCommentInfo">
+		select comment_id cid,user_name uname,content c,comment_rank cr,add_time atime
+		from `comment`
+		where goods_id = ${goods_id}
+		limit #{nowpage},5
+	</select>
+	
+	<select id="getCommentCount" parameterType="int" resultType="int">
+		select count(*)
+		from `comment`
+		where goods_id = ${goods_id}
+	</select>
+	
+	<select id="getGoodsOrderNum" parameterType="int" resultType="int">
+		select count(*)
+		from `order_details`
+		where goods_id = ${goods_id}
+	</select>
+	
+	<insert id="insertGoodsDate" parameterType="UpdateGoodsDate">
+		insert into date_product (goods_id,visit_date) VALUES(${goods_id},#{visit_date})
+	</insert>
+	<select id="selectgoodsrecommend" resultType="goods" parameterType="int">
+		SELECT * FROM `goods` WHERE goods_id IN (SELECT goodsid from `user_goods_recommendItemCF` where userid=#{id})
+	</select>
+	<select id="selectgoodsRelation" resultType="goods" parameterType="int">
+		SELECT * FROM `goods` WHERE goods_id IN (SELECT tgoods_id from `goodsRelationgoods` where goods_id=#{id})
+	</select>
+	<select id="selectgoods" resultType="goods" parameterType="int">
+		SELECT * FROM `goods` WHERE goods_id=#{id}
+	</select>
+	<select id="selectuserreceiver" resultType="Receiver" parameterType="int">
+			select * from receiver where user_id=#{user_id}
+	</select>
+</mapper>

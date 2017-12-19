@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.users.ManagerListMapper">
+<!-- 查询所以管理员 -->
+<select id="queryAllManager" resultType="manger">
+select * from manger
+</select>
+<!-- 分页查询管理员 -->
+<select id="queryAllManagerLimit" parameterType="int" resultType="manger">
+select * 
+from manger
+limit #{startindex},12
+</select>
+<!-- 增加管理员 -->
+<insert id="insertManager" parameterType="manger">
+insert into 
+manger(manger_name,manger_password,manger_tele,manger_sex,manger_age) 
+values(#{manger_name},#{manger_password},#{manger_tele},#{manger_sex},#{manger_age}) 
+</insert>
+<!-- 修改管理员 -->
+<update id="updateManager" parameterType="manger">
+update manger
+<set >
+      <if test="manger_name != null" >
+        manger_name = #{manger_name,jdbcType=VARCHAR},
+      </if>
+      <if test="manger_password != null" >
+        manger_password = #{manger_password,jdbcType=VARCHAR},
+      </if>
+      <if test="manger_sex != null" >
+        manger_sex = #{manger_sex,jdbcType=INTEGER},
+      </if>
+      <if test="manger_tele != null" >
+        manger_tele = #{manger_tele,jdbcType=INTEGER},
+      </if>
+      <if test="manger_age != null" >
+        manger_age = #{manger_age,jdbcType=INTEGER},
+      </if>
+    </set>
+where manger_id=#{manger_id}  
+</update>
+<!-- 修改管理员前置查询 -->
+<select id="queryBefroeUpdateManager" parameterType="int" resultType="manger">
+select * from manger where manger_id=#{manger_id}
+</select>
+<!-- 修改查重 -->
+<select id="updateCheck" parameterType="string" resultType="int">
+select count(*) from manger where manger_name=#{manger_name}
+</select>
+<!--删除管理员-->
+<delete id="deleteManager" parameterType="int">
+delete from manger where manger_id=#{manger_id}
+</delete>
+<!--组合（manger&manage_role）-->
+<resultMap type="mangerAndManageRole" id="mangerAndManage_Role">
+        <id column="manger_id" property="manger_id"/>
+		<result column="manger_name" property="manger_name"/>
+		<result column="manger_password" property="manger_password"/>
+		<result column="manger_sex" property="manger_sex"/>
+		<result column="manger_tele" property="manger_tele"/>
+		<result column="manger_age" property="manger_age"/>
+		<association property="manage_role" javaType="manage_role">
+			<id column="manage_role_id" property="manage_role_id"/>
+			<result column="manage_role_type" property="manage_role_type"/>
+		</association>
+</resultMap>
+<!--查询管理员以及角色-->
+<select id="queryManagerAndRole" resultMap="mangerAndManage_Role" >
+select m.manger_id manger_id,r.manage_role_id manage_role_id,m.manger_name manger_name,m.manger_password manger_password,m.manger_sex manger_sex,m.manger_tele manger_tele,m.manger_age manger_age,r.manage_role_type manage_role_type 
+from manger m 
+join manage_role r 
+on m.manger_id=r.manage_role_id
+</select>
+<!-- 修改角色前置查询 -->
+<select id="queryBefroeUpdateManagerRole" resultMap="mangerAndManage_Role" parameterType="int">
+select m.manger_id manger_id,r.manage_role_id manage_role_id,m.manger_name manger_name,m.manger_password manger_password,m.manger_sex manger_sex,m.manger_tele manger_tele,m.manger_age manger_age,r.manage_role_type manage_role_type 
+from manger m 
+join manage_role r 
+on m.manger_id=r.manage_role_id
+where m.manger_id=#{manger_id}
+</select>
+<!-- 修改角色类型 -->
+<update id="updateManagerRole" parameterType="manage_role">
+update manage_role 
+set manage_role_type=#{manage_role_type}
+where manage_role_id=#{manage_role_id}
+</update>
+<!-- 修改角色类型为无角色 -->
+<update id="updateManagerNoneRole" parameterType="int">
+update manage_role 
+set manage_role_type=0
+where manage_role_id=#{manage_role_id}
+</update>
+<!-- 日志记录 -->
+<insert id="insertLog" parameterType="manager_log">
+insert 
+into 
+manager_log(manager_id,log_method,log_time,log_origin) 
+values(#{manager_id},#{log_method},#{log_time},#{log_origin})
+</insert>
+<!-- 分页查询记录 -->
+<select id="queryLogLimit" parameterType="int" resultType="manager_log">
+select * from manager_log limit #{startindex},12
+</select>
+<!-- 查询日志总数 -->
+<select id="queryLogCount" resultType="int">
+select count(*) from manager_log 
+</select>
+<!-- 删除日志 -->
+<delete id="deleteLog" parameterType="int">
+delete from manager_log where manager_log_id=#{manager_log_id}
+</delete>
+<!-- 按日期查询日志 -->
+<select id="qureyByDateLimit" resultType="manager_log" parameterType="dateQueryNowpage">
+SELECT *
+from manager_log 
+<if test="startdate != '' and enddate != ''">
+where log_time  between #{startdate} and #{enddate}
+</if>
+<if test="startdate == '' and enddate != ''">
+where log_time &lt;=  #{enddate}
+</if>
+<if test="startdate != '' and enddate == ''">
+where log_time &gt;= #{startdate}
+</if>
+<if test="startdate == '' and enddate == ''">
+</if>
+limit #{nowpage},12
+</select>
+<!-- 查询日志总数 -->
+<select id="queryDateLogCount" resultType="int" parameterType="dateQueryNowpage">
+SELECT count(*)
+from manager_log 
+<if test="startdate != '' and enddate != ''">
+where log_time  between #{startdate} and #{enddate}
+</if>
+<if test="startdate == '' and enddate != ''">
+where log_time &lt;=  #{enddate}
+</if>
+<if test="startdate != '' and enddate == ''">
+where log_time &gt;= #{startdate}
+</if>
+<if test="startdate == '' and enddate == ''">
+</if>
+</select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.goods.BrandMapper">
+
+	<!-- 商品品牌表 -->
+
+	<select id="findBrandAllList" resultType="com.gzyz.bean.goods.Brand">
+		SELECT
+			*
+		FROM
+			brand
+								
+	</select>
+	
+</mapper>
+
+

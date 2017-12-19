@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.order.OrderListMapper">
+
+<!-- <resultMap type="ordervo" id="queryAllOrderList">
+	<id column="cid" property="comment_id" />
+	<result column="gid" property="goods_id" />
+	<result column="gname" property="goods_name" />
+	<result column="uid" property="user_id" />
+	<result column="uname" property="user_name" />
+	<result column="con" property="content" />
+	<result column="rank" property="comment_rank" />
+	<result column="time" property="add_time" />
+	<result column="time" property="formatDateString" />
+	<result column="status" property="status" />
+	<association property="goods" javaType="goods">
+				<id column="gid" property="goods_id"/>
+				<result column="gname" property="goods_name"/>
+	</association>
+</resultMap> -->
+
+<!-- <select id="queryAllOrderList" parameterType="string" resultMap="queryAllOrderList">
+		select com.comment_id cid,com.goods_id cgid,com.user_id uid,com.user_name uname,com.content con,com.comment_rank rank,com.add_time time,com.status status,
+			   g.goods_id gid,g.goods_name gname	 
+		from comment com 
+		join goods g
+		on com.goods_id=g.goods_id
+		where g.goods_name like '%${goods_name}%' or com.user_name like '%${goods_name}%'
+		limit #{pn},5
+	</select> -->
+
+	<resultMap type="ordervo" id="queryAllOrderList">
+	<id column="oid" property="order_id" />
+	<result column="uid" property="user_id" />
+	<result column="uname" property="user_name" />
+	<result column="otime" property="formatDateString" />
+	<result column="ostatus" property="order_status" />
+	<result column="gid" property="goods_id" />
+	<result column="gname" property="goods_name" />
+	<result column="q" property="quantity" />
+	<result column="t" property="total_fee" />
+	<result column="sp" property="shop_price" />
+	<!-- <association property="order_details" javaType="order_details">
+			<id column="odid" property="order_details"/>
+			<result column="gname" property="goods_name"/>	
+	</association>
+	<association property="goods" javaType="goods">
+			<id column="gid" property="goods_id"/>
+			<result column="gname" property="goods_name"/>
+	</association> -->
+</resultMap>
+
+<select id="queryAllOrderList" parameterType="string" resultMap="queryAllOrderList">
+	select o.order_id oid,o.user_id uid,u.user_name uname,o.order_time otime,o.order_status ostatus,
+		   od.goods_id gid,od.quantity q,od.total_fee t,
+		   g.shop_price sp,g.goods_name gname
+	from `order` o
+	join order_details od on o.order_id=od.order_id
+	join goods g on od.goods_id=g.goods_id
+	join user u on u.user_id=o.user_id
+</select>
+
+<select id="queryOrderByKeywords" parameterType="OrderKeywords" resultMap="queryAllOrderList">
+	select o.order_id oid,o.user_id uid,u.user_name uname,o.order_time otime,o.order_status ostatus,
+		   od.goods_id gid,od.quantity q,od.total_fee t,
+		   g.shop_price sp,g.goods_name gname
+	from `order` o
+	join order_details od on o.order_id=od.order_id
+	join goods g on od.goods_id=g.goods_id
+	join user u on u.user_id=o.user_id
+	where o.order_id =${order_id} 
+	<!-- limit #{nowpage},5 -->
+</select>
+
+<select id="queryOrderByLimit" parameterType="OrderKeywords" resultMap="queryAllOrderList">
+	select o.order_id oid,o.user_id uid,u.user_name uname,o.order_time otime,o.order_status ostatus,
+		   od.goods_id gid,od.quantity q,od.total_fee t,
+		   g.shop_price sp,g.goods_name gname
+	from `order` o
+	join order_details od on o.order_id=od.order_id
+	join goods g on od.goods_id=g.goods_id
+	join user u on u.user_id=o.user_id
+	where o.order_id =${order_id} 
+	limit #{nowpage},5
+</select>
+<!-- or o.user_name like '%${user_name}%' -->
+<select id="queryAllOrderCounts" parameterType="OrderKeywords" resultType="int">
+	select count(*)
+	from `order` o
+	join order_details od on o.order_id=od.order_id
+	join goods g on od.goods_id=g.goods_id
+	where o.order_id =${order_id} 
+</select>
+
+<resultMap type="orderinfo" id="queryOrderReceiverInfo">
+	<id column="oid" property="order_id" />
+	<result column="rid" property="receiver_id" />
+	<result column="spname" property="shipping_name" />
+	<result column="spcod" property="shipping_code" />
+	<result column="rs" property="receiver_state" />
+	<result column="rc" property="receiver_city" />
+	<result column="rd" property="receiver_district" />
+	<result column="ra" property="receiver_address" />
+</resultMap>
+<select id="queryOrderReceiverInfo" parameterType="int" resultMap="queryOrderReceiverInfo">
+	select o.order_id oid,o.shipping_name spname,o.shipping_code spcod,
+			 r.receiver_id rid,r.receiver_state rs,r.receiver_city rc,r.receiver_district rd,r.receiver_address ra
+	from `order` o
+	join receiver r on o.receiver_id=r.receiver_id
+	where o.order_id=${order_id}
+</select>
+
+<update id="updateOrderShippingNameInfo" parameterType="StatusKeywords">
+	update `order` set shipping_name = #{shipping_name}
+	where order_id = ${order_id}
+</update> 
+
+<update id="updateOrderShippingCodeInfo" parameterType="StatusKeywords">
+	update `order` set shipping_code = #{shipping_code}
+	where order_id = ${order_id}
+</update> 
+
+<update id="updateReceiverStateInfo" parameterType="StatusKeywords">
+	update `receiver` set receiver_state = #{receiver_state}
+	where receiver_id = ${receiver_id}
+</update>
+
+<update id="updateReceiverCityInfo" parameterType="StatusKeywords">
+	update `receiver` set receiver_city = #{receiver_city}
+	where receiver_id = ${receiver_id}
+</update>
+
+<update id="updateReceiverDistrictInfo" parameterType="StatusKeywords">
+	update `receiver` set receiver_district = #{receiver_district}
+	where receiver_id = ${receiver_id}
+</update>
+
+<update id="updateReceiverAddressInfo" parameterType="StatusKeywords">
+	update `receiver` set receiver_address = #{receiver_address}
+	where receiver_id = ${receiver_id}
+</update>
+
+<select id="queryAllOrderByUserList" parameterType="int" resultType="com.gzyz.bean.order.Order">
+	select *   
+	from `order` 
+	where user_id = #{user_id} and order_status = 0   
+</select>
+
+<select id="queryAllOrderByUser" parameterType="int" resultType="com.gzyz.bean.order.Order">
+	select *   
+	from `order` 
+	where user_id = #{user_id}   
+</select>
+
+<update id="updateOrderByUser" parameterType="com.gzyz.bean.order.Order">
+	<!-- update order set receiver_address = #{receiver_address}
+	where receiver_id = ${receiver_id} --> 
+	update `order` set order_id = #{order_id},order_status = #{order_status} 
+	where user_id = #{user_id};       
+</update> 
+
+<update id="updateOrderByUserStuts" parameterType="com.gzyz.bean.order.Order">  
+	update `order` set order_status = #{order_status} 
+	where user_id = #{user_id};       
+</update> 
+
+<select id="queryAllOrderByUserCounts" parameterType="int" resultType="int">
+	select count(*)
+	from `order` 
+	where user_id = #{user_id} 
+</select>
+
+<select id="deleteOrderByUserId" parameterType="int">
+	delete 
+	from `order` 
+	where order_id = #{order_id} 
+</select>
+
+<update id="updateOrderDetailsById" parameterType="com.gzyz.bean.order.Order_details">  
+	update `order_details` set order_id = #{order_id} 
+	where order_details_id = #{order_details_id}
+</update>  
+
+<select id="updateOrderDetailsByIdStart">   
+	SET foreign_key_checks = 0  
+</select>        
+
+<select id="updateOrderDetailsByIdEnd">  
+	SET foreign_key_checks = 1
+</select>
+
+<select id="queryOrderDetailsById" parameterType="int" resultType="com.gzyz.bean.order.Order_details">
+	select *
+	from `order_details` 
+	where order_id = #{order_id} 
+</select>
+
+<update id="updateOrderByOrder" parameterType="com.gzyz.bean.order.Order">
+	update `order` set order_status = #{order_status} 
+	where order_id = #{order_id};       
+</update>
+
+<select id="queryOrderById" parameterType="int" resultType="com.gzyz.bean.order.Order">
+	select *
+	from `order` 
+	where order_id = #{order_id} 
+</select>
+
+
+</mapper>

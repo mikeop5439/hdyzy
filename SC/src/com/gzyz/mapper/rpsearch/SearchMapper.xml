@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.rpsearch.SearchMapper">
+<!-- 搜索商品 -->
+<select id="searchGoods" parameterType="searchAndIndex" resultType="goodsAndSales">
+SELECT g.goods_id goods_id,g.cat_id cat_id,g.goods_sn goods_sn,g.goods_name goods_name,g.brand_id brand_id,
+g.goods_number goods_number,g.goods_weight goods_weight,g.original_price original_price,g.shop_price shop_price,
+g.keywords keywords,g.goods_brief goods_brief,g.goods_desc goods_desc,g.original_img original_img,
+g.show_in_recyc show_in_recyc,g.is_shelves is_shelves, ifnull(SUM(d.quantity),0) sales
+FROM goods g
+LEFT JOIN
+order_details d
+ON g.goods_id=d.goods_id
+GROUP BY g.goods_id
+HAVING g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%"
+LIMIT #{nowindex},8
+</select>
+<!-- 搜索商品(销量排序) -->
+<select id="searchGoodsBySales" parameterType="searchAndIndex" resultType="goodsAndSales">
+SELECT g.goods_id goods_id,g.cat_id cat_id,g.goods_sn goods_sn,g.goods_name goods_name,g.brand_id brand_id,
+g.goods_number goods_number,g.goods_weight goods_weight,g.original_price original_price,g.shop_price shop_price,
+g.keywords keywords,g.goods_brief goods_brief,g.goods_desc goods_desc,g.original_img original_img,
+g.show_in_recyc show_in_recyc,g.is_shelves is_shelves, ifnull(SUM(d.quantity),0) sales
+FROM goods g
+LEFT JOIN
+order_details d
+ON g.goods_id=d.goods_id
+GROUP BY g.goods_id
+HAVING g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%"
+ORDER BY sales DESC
+LIMIT #{nowindex},8
+</select>
+<!-- 搜索商品(价格优先) -->
+<select id="searchGoodsByPrice" parameterType="searchAndIndex" resultType="goodsAndSales">
+SELECT g.goods_id goods_id,g.cat_id cat_id,g.goods_sn goods_sn,g.goods_name goods_name,g.brand_id brand_id,
+g.goods_number goods_number,g.goods_weight goods_weight,g.original_price original_price,g.shop_price shop_price,
+g.keywords keywords,g.goods_brief goods_brief,g.goods_desc goods_desc,g.original_img original_img,
+g.show_in_recyc show_in_recyc,g.is_shelves is_shelves, ifnull(SUM(d.quantity),0) sales
+FROM goods g
+LEFT JOIN
+order_details d
+ON g.goods_id=d.goods_id
+GROUP BY g.goods_id
+HAVING g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%"
+ORDER BY shop_price
+LIMIT #{nowindex},8
+</select>
+<!-- 搜索商品（商品总数） -->
+<select id="searchGoodsCount" parameterType="searchAndIndex" resultType="int">
+SELECT count(*) from  goods g
+WHERE g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%"
+LIMIT #{nowindex},8
+</select>
+<!-- 待查询的商品品牌 -->
+<select id="brandOfTheSearch" parameterType="searchAndIndex" resultType="brandOfTheSearch">
+SELECT DISTINCT b.brand_name 
+from (goods g,brand b)
+WHERE g.brand_id=b.brand_id AND g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%"
+</select>
+<!-- 通过品牌查询 -->
+<select id="searchGoodsByBrand" parameterType="searchAndIndexAndBrand" resultType="goodsAndSales">
+SELECT g.goods_id goods_id,g.cat_id cat_id,g.goods_sn goods_sn,g.goods_name goods_name,g.brand_id brand_id,b.brand_name brand_name,
+g.goods_number goods_number,g.goods_weight goods_weight,g.original_price original_price,g.shop_price shop_price,
+g.keywords keywords,g.goods_brief goods_brief,g.goods_desc goods_desc,g.original_img original_img,
+g.show_in_recyc show_in_recyc,g.is_shelves is_shelves, ifnull(SUM(d.quantity),0) sales
+FROM goods g
+JOIN brand b
+ON g.brand_id=b.brand_id
+LEFT JOIN
+order_details d
+ON g.goods_id=d.goods_id
+GROUP BY g.goods_id
+HAVING g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%" and b.brand_name=#{brand_name}
+LIMIT #{nowindex},8
+</select>
+<!-- 通过品牌查询(销量优先) -->
+<select id="searchGoodsByBrandBySales" parameterType="searchAndIndexAndBrand" resultType="goodsAndSales">
+SELECT g.goods_id goods_id,g.cat_id cat_id,g.goods_sn goods_sn,g.goods_name goods_name,g.brand_id brand_id,b.brand_name brand_name,
+g.goods_number goods_number,g.goods_weight goods_weight,g.original_price original_price,g.shop_price shop_price,
+g.keywords keywords,g.goods_brief goods_brief,g.goods_desc goods_desc,g.original_img original_img,
+g.show_in_recyc show_in_recyc,g.is_shelves is_shelves, ifnull(SUM(d.quantity),0) sales
+FROM goods g
+JOIN brand b
+ON g.brand_id=b.brand_id
+LEFT JOIN
+order_details d
+ON g.goods_id=d.goods_id
+GROUP BY g.goods_id
+HAVING g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%" and b.brand_name=#{brand_name}
+ORDER BY sales DESC
+LIMIT #{nowindex},8
+</select>
+<!-- 通过品牌查询(价格优先) -->
+<select id="searchGoodsByBrandByPrice" parameterType="searchAndIndexAndBrand" resultType="goodsAndSales">
+SELECT g.goods_id goods_id,g.cat_id cat_id,g.goods_sn goods_sn,g.goods_name goods_name,g.brand_id brand_id,b.brand_name brand_name,
+g.goods_number goods_number,g.goods_weight goods_weight,g.original_price original_price,g.shop_price shop_price,
+g.keywords keywords,g.goods_brief goods_brief,g.goods_desc goods_desc,g.original_img original_img,
+g.show_in_recyc show_in_recyc,g.is_shelves is_shelves, ifnull(SUM(d.quantity),0) sales
+FROM goods g
+JOIN brand b
+ON g.brand_id=b.brand_id
+LEFT JOIN
+order_details d
+ON g.goods_id=d.goods_id
+GROUP BY g.goods_id
+HAVING g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%" and b.brand_name=#{brand_name}
+ORDER BY shop_price
+LIMIT #{nowindex},8
+</select>
+<!-- 通过品牌查询总数 -->
+<select id="searchGoodsByBrandCount" parameterType="searchAndIndexAndBrand" resultType="int">
+SELECT count(*)
+FROM goods g
+JOIN brand b
+ON g.brand_id=b.brand_id
+WHERE g.show_in_recyc=0 AND g.is_shelves=1 AND g.keywords like "%"#{keywords}"%" and b.brand_name=#{brand_name}
+LIMIT #{nowindex},8
+</select>
+</mapper>

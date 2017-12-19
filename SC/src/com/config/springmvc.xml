@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	
+	<!--Springmvc注解器  -->
+	<mvc:annotation-driven conversion-service="myConverter"></mvc:annotation-driven>
+	<!-- 指定一个扫描器 -->
+	<context:component-scan base-package="com.gzyz"/>
+	<!-- 处理器映射器 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+	<!-- 适配器解析器 -->	
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="webBindingInitializer" ref="myBinder"/>
+		<property name="messageConverters">
+			<list>
+				<!-- 将消息转换为json所需要的配置。 -->
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	<!-- 视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- <property name="prefix" value="/jsp/"/>
+		<property name="suffix" value=".jsp"/> -->
+	</bean>	
+	
+	
+	<!-- 注册一下转换器 -->
+	<bean id="myConverter" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- <property name="converters">
+			<list>
+				日期转换器
+				<bean class="com.gzyz.controller.converter.DateConverter"/>
+					字符串克隆
+				<bean class="com.gzyz.controller.converter.StringConvertor"/>
+			</list>
+		</property> -->
+	</bean>
+	
+	<bean id="myBinder" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+		<property name="conversionService" ref="myConverter"/>
+	</bean>
+	
+	<!-- 配置springmvc的上传解析器
+		springmvc上传实现依赖了commons-fileupload组件
+		commons-fileupload-1.2.2.jar
+		commons-io-2.4.jar
+	 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>5248800</value>
+		</property>
+	</bean>
+	
+	
+	<!-- 拦截器的配置 -->
+	<mvc:interceptors>
+		<!-- 配置具体的拦截器 -->
+		<mvc:interceptor>
+			<!-- 这个配置就是表示拦截器拦截那些请求 -->
+			<!-- <mvc:mapping path="/user/queryAllUsers.action"/> -->
+			<!-- 拦截所有的请求 -->
+			<mvc:mapping path="/**"/>
+			<bean class="com.gzyz.controller.inteceptor.LoginInterceptor"/>
+		</mvc:interceptor>
+		
+	</mvc:interceptors>
+	
+	
+	
+	
+	
+</beans>

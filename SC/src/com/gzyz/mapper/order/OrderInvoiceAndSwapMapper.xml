@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.order.OrderInvoiceAndSwapMapper">
+<!-- 分页查询退货表 -->
+<select id="queryAllInvoiceLimit" parameterType="int" resultType="order_invoice">
+select * 
+from order_invoice
+limit #{startindex},12
+</select>
+<!-- 查询退货换单总数总数 -->
+<select id="queryInvoiceCount" resultType="int">
+select count(*) from order_invoice 
+</select>
+<!-- 同意申请 -->
+<update id="agreeTheApply" parameterType="int">
+update order_invoice set invoice_status=1 where invoice_id=#{invoice_id}
+</update>
+<!-- 按日期分页查询 -->
+<select id="qureyByDateLimit" resultType="order_invoice" parameterType="dateQueryNowpage">
+SELECT *
+
+from order_invoice 
+
+<if test="startdate != '' and enddate != ''">
+where apply_time  between #{startdate} and #{enddate}
+</if>
+<if test="startdate == '' and enddate != ''">
+where apply_time &lt;=  #{enddate}
+</if>
+<if test="startdate != '' and enddate == ''">
+where apply_time &gt;= #{startdate}
+</if>
+<if test="startdate == '' and enddate == ''">
+</if>
+limit #{nowpage},12
+</select>
+<!-- 按日期查询退货换单总数总数 -->
+<select id="queryDateInvoiceCount" resultType="int" parameterType="dateQueryNowpage">
+SELECT count(*)
+
+from order_invoice 
+
+<if test="startdate != '' and enddate != ''">
+where apply_time  between #{startdate} and #{enddate}
+</if>
+<if test="startdate == '' and enddate != ''">
+where apply_time &lt;=  #{enddate}
+</if>
+<if test="startdate != '' and enddate == ''">
+where apply_time &gt;= #{startdate}
+</if>
+<if test="startdate == '' and enddate == ''">
+</if>
+</select>
+<!--查询订单(order&user&order_details)-->
+<resultMap type="orderAndUserAndOrderDetails" id="queryOrders">
+		<id column="oid" property="order_id"/>
+		<result column="otime" property="order_time"/>
+		<result column="ostatus" property="order_status"/>
+		<result column="optime" property="pay_time"/>
+		<result column="osn" property="shipping_name"/>
+		<result column="osc" property="shipping_code"/>
+		<association property="user" javaType="user">
+			<id column="uid" property="user_id"/>
+			<result column="uname" property="user_name"/>
+		</association>
+		<collection property="order_details" ofType="order_details">
+		    <id column="did" property="order_details_id"/>
+		    <result column="dgid" property="goods_id"/>
+			<result column="dquantity" property="quantity"/>
+			<result column="dsprice" property="shop_price"/>
+			<result column="dgname" property="goods_name"/>
+			<result column="dtotalfree" property="total_fee"/>
+		</collection>
+</resultMap>
+<!-- 订单查询 -->
+<select id="queryTheOrder" resultMap="queryOrders" parameterType="orderDateAndUsernameAndOrderId">
+SELECT o.order_id oid,o.user_id uid,u.user_name uname,o.order_time otime,o.order_status ostatus,o.pay_time optime,o.shipping_name osn,o.shipping_code osc,d.order_details_id did,d.goods_id dgid,d.quantity dquantity,d.shop_price dsprice,d.goods_name dgname,d.total_fee dtotalfree
+FROM `order` o 
+join order_details d 
+ON o.order_id=d.order_id 
+JOIN `user` u 
+ON o.user_id=u.user_id
+<if test="order_id != '' ">
+where o.order_id=#{order_id}
+</if>
+<if test="order_id == '' ">
+
+<if test="startdate != '' and enddate != ''">
+where u.user_name=#{user_name} and o.order_time  between #{startdate} and #{enddate}
+</if>
+<if test="startdate == '' and enddate != ''">
+where u.user_name=#{user_name} and o.order_time  &lt;=  #{enddate}
+</if>
+<if test="startdate != '' and enddate == ''">
+where u.user_name=#{user_name} and o.order_time &gt;= #{startdate}
+</if>
+<if test="startdate == '' and enddate == ''">
+where u.user_name=#{user_name}
+</if>
+
+</if>
+</select>
+<!-- 订单查询详细表数量 -->
+<select id="queryTheOrderCount" resultType="int" parameterType="orderDateAndUsernameAndOrderId">
+SELECT count(*)
+FROM `order` o 
+join order_details d 
+ON o.order_id=d.order_id 
+JOIN `user` u 
+ON o.user_id=u.user_id
+</select>
+<!-- 查询订单状态-->
+<select id="queryTheOrderStatus" resultType="int" parameterType="int">
+SELECT order_status
+FROM `order` o 
+WHERE o.order_id=#{order_id}
+</select>
+<!-- 修改订单状态 -->
+<update id="updateTheOrderStatus" parameterType="theOrderStatus">
+update `order`
+set
+order_status=#{order_status}
+where order_id=#{order_id}
+</update>
+<!-- 查询快递信息 -->
+<select id="queryShapping" resultType="shappingNameAndCode" parameterType="int">
+SELECT shipping_name,shipping_code
+FROM `order` o 
+WHERE o.order_id=#{order_id}
+</select>
+<!-- 修改快递信息 -->
+<update id="updateShapping" parameterType="shappingAndOrderId">
+update `order`
+set
+shipping_name=#{shipping_name},
+shipping_code=#{shipping_code}
+where order_id=#{order_id}
+</update>
+</mapper>

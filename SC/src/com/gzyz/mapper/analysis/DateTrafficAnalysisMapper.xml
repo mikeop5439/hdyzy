@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.analysis.DateTrafficAnalysisMapper">
+<!-- 流量分析封装 -->
+<resultMap type="dateTraffice" id="dateAndCount">
+<result column="count" property="count"/>
+<result column="date" property="user_accesstime"/>
+</resultMap>
+<!-- 查询每日的访问数 -->
+<select id="queryDateTraffic" resultMap="dateAndCount">
+select count(*) count,user_accesstime date 
+FROM date_traffic 
+GROUP BY user_accesstime
+</select>
+<!-- 客户分析封装 -->
+<resultMap type="customerAnalysis" id="cityAndCount">
+<result column="city" property="city"/>
+<result column="count" property="count"/>
+</resultMap>
+<!-- 查询每个城市的购买量 -->
+<select id="queryReceiverCityCount" resultMap="cityAndCount">
+SELECT count(*) count,r.receiver_city city from `order` o JOIN  receiver r ON o.receiver_id=r.receiver_id GROUP BY r.receiver_city
+</select>
+<!-- 销售概况封装 -->
+<resultMap type="goodsNameAndSalesCount" id="salesabout">
+<result column="name" property="goods_name"/>
+<result column="sales" property="count"/>
+</resultMap>
+<!-- 查询销售前十的商品 -->
+<select id="queryTopGoods" resultMap="salesabout">
+SELECT goods_name name,sum(quantity) sales 
+FROM order_details 
+GROUP BY goods_id 
+order by sales desc
+limit 0,10
+</select>
+<!-- 查询所有商品的销量 -->
+<select id="queryAllGoods" resultMap="salesabout">
+SELECT goods_name name,sum(quantity) sales 
+FROM order_details 
+GROUP BY goods_id 
+order by sales desc
+</select>
+<!-- 查询销售额前十的商品 -->
+<select id="queryTopGoodsFree" resultMap="salesabout">
+SELECT goods_name name,sum(total_fee) sales 
+FROM order_details 
+GROUP BY goods_id 
+order by sales desc
+limit 0,10
+</select>
+<!-- 查询销售前十的分类-->
+<select id="queryTopCategorySales" resultMap="salesabout">
+SELECT c.cat_name name,SUM(o.quantity) count
+FROM order_details o
+JOIN goods g
+ON o.goods_id=g.goods_id
+JOIN  category c
+ON g.cat_id=c.cat_id
+GROUP BY c.cat_name
+ORDER BY count desc
+LIMIT 0,10
+</select>
+<!-- 查询销售额前十的分类 -->
+<select id="queryTopCategoryFree" resultMap="salesabout">
+SELECT c.cat_name name,SUM(o.total_fee) count
+FROM order_details o
+JOIN goods g
+ON o.goods_id=g.goods_id
+JOIN  category c
+ON g.cat_id=c.cat_id
+GROUP BY c.cat_name
+ORDER BY count desc
+LIMIT 0,10
+</select>
+<!-- 查询购买量前十的用户 -->
+<select id="queryTopConsumption" resultMap="salesabout">
+SELECT SUM(d.total_fee) count,u.user_name name
+FROM order_details d
+JOIN `order` o
+on o.order_id=d.order_id
+JOIN `user` u
+ON o.user_id=u.user_id
+GROUP BY u.user_name
+ORDER BY SUM(d.total_fee) desc
+limit 0,10
+</select>
+<!-- 商品访问量 -->
+<select id="queryBuy" resultType="int">
+select count(*) from  date_product 
+</select>
+<!-- 商品购买率 -->
+<select id="queryVisit" resultType="int">
+SELECT sum(quantity) sales 
+FROM order_details 
+</select>
+</mapper>

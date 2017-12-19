@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.comment.GoodsCommentMapper">
+
+<!-- 
+
+商品评论列表显示所有信息
+
+ -->
+<!-- <resultMap type="commentvo" id="queryAllComment">
+	<id column="cid" property="comment_id" />
+	<result column="cgid" property="goods_id" />
+	<result column="gname" property="goods_name" />
+	<result column="uid" property="user_base_id" />
+	<result column="uname" property="user_base_name" />
+	<result column="con" property="content" />
+	<result column="rank" property="comment_rank" />
+	<result column="time" property="add_time" />
+	<result column="status" property="status" />
+</resultMap>
+	<select id="queryAllComment" resultMap="queryAllComment">
+		select com.comment_id cid,com.goods_id cgid,com.user_base_id uid,com.user_base_name uname,com.content con,com.comment_rank rank,com.add_time time,com.status status,
+			   g.goods_id gid,g.goods_name gname	 
+		from comment com 
+		join goods g
+		on com.goods_id=g.goods_id
+	</select> -->
+	
+<resultMap type="commentvo" id="queryCommentList">
+	<id column="cid" property="comment_id" />
+	<result column="gid" property="goods_id" />
+	<result column="gname" property="goods_name" />
+	<result column="uid" property="user_id" />
+	<result column="uname" property="user_name" />
+	<result column="con" property="content" />
+	<result column="rank" property="comment_rank" />
+	<result column="time" property="add_time" />
+	<result column="time" property="formatDateString" />
+	<result column="status" property="status" />
+	<association property="goods" javaType="goods">
+				<id column="gid" property="goods_id"/>
+				<result column="gname" property="goods_name"/>
+	</association>
+</resultMap>
+	<select id="queryCommentList" parameterType="string" resultMap="queryCommentList">
+		select com.comment_id cid,com.goods_id cgid,com.user_id uid,u.user_name uname,com.content con,com.comment_rank rank,com.add_time time,com.status status,
+			   g.goods_id gid,g.goods_name gname	 
+		from comment com 
+		join goods g
+		on com.goods_id=g.goods_id
+		join user u on u.user_id=com.user_id
+		where g.goods_name like '%${goods_name}%' or u.user_name like '%${goods_name}%'
+		<!-- limit #{pn},5 -->
+	</select>
+	<!--  parameterType="string" -->
+	
+	<select id="queryAllCommentCounts" parameterType="string" resultType="int" >
+		select count(*) from comment com
+		join goods g
+		on com.goods_id=g.goods_id
+		join user u on u.user_id=com.user_id
+		where g.goods_name like '%${goods_name}%' or u.user_name like '%${goods_name}%'
+	</select>
+	
+	<select id="queryCommentByLimit" parameterType="CommentPageKeywords" resultMap="queryCommentList">
+		select com.comment_id cid,com.goods_id cgid,com.user_id uid,u.user_name uname,com.content con,com.comment_rank rank,com.add_time time,com.status status,
+			   g.goods_id gid,g.goods_name gname	 
+		from comment com 
+		join goods g
+		on com.goods_id=g.goods_id
+		join user u on u.user_id=com.user_id
+		where g.goods_name like '%${goods_name}%' or u.user_name like '%${goods_name}%'
+		limit #{nowpage},5
+	</select>
+	
+	<update id="updateCommentStatusToTrue" parameterType="int">
+		update `comment` set status = 1
+		where comment_id = ${comment_id}
+	</update>
+	
+	<update id="updateCommentStatusToFalse" parameterType="int">
+		update `comment` set status = 0
+		where comment_id = ${comment_id}
+	</update>
+</mapper>

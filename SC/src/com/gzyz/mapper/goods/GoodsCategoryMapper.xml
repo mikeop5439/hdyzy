@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.goods.GoodsCategoryMapper">
+
+	<!-- 商品表 -->
+	<resultMap type="com.gzyz.bean.goods.extend.GoodsQueryVo" id="GoodsCategoryQueryAllResultMap">
+		
+		<id column="goods_id" property="goods.goods_id"/>
+		<result column="cat_id" property="goods.cat_id"/>
+		<result column="goods_sn" property="goods.goods_sn"/>
+		<result column="goods_name" property="goods.goods_name"/>
+		<result column="brand_id" property="goods.brand_id"/>
+		<result column="goods_number" property="goods.goods_number"/>
+		<result column="goods_weight" property="goods.goods_weight"/>
+		<result column="original_price" property="goods.original_price"/>
+		<result column="shop_price" property="goods.shop_price"/>
+		<result column="keywords" property="goods.keywords"/> 
+		<result column="goods_brief" property="goods.goods_brief"/>
+		<result column="goods_desc" property="goods.goods_desc"/>
+		<result column="original_img" property="goods.original_img"/>
+		<result column="show_in_recyc" property="goods.show_in_recyc"/>
+		<result column="is_shelves" property="goods.is_shelves"/>			
+		<!-- 分类表 -->
+	 	<association property="category" javaType="com.gzyz.bean.goods.Category">
+	  	 		<id column="cat_id" property="cat_id"/>
+	  	 		<result column="cat_name" property="cat_name"/>
+	  	 		<result column="keywords" property="keywords"/>
+	  	 		<result column="cat_desc" property="cat_desc"/>
+	  	 		<result column="show_in_nav" property="show_in_nav"/>
+	  	 		<result column="sort_order" property="sort_order"/>	  	 		
+  	 	</association>
+	    <!-- 品牌表  -->
+	  	<association property="brand" javaType="com.gzyz.bean.goods.Brand">
+	  	 		<id column="brand_id" property="brand_id"/>
+	  	 		<result column="brand_name" property="brand_name"/>
+	  	 		<result column="brand_logo" property="brand_logo"/>
+	  	 		<result column="brand_desc" property="brand_desc"/>
+	  	 		
+  	 	</association> 	
+	
+	</resultMap>
+	
+	<!-- 查询订单关联查询用户信息 -->
+
+	<select id="findGoodsAllList" parameterType="com.gzyz.bean.goods.extend.GoodsQueryVo" resultMap="GoodsCategoryQueryAllResultMap">
+		SELECT
+			goods.goods_id,
+			goods.goods_name,
+			category.cat_name, 
+			brand.brand_name,
+			category.cat_desc,
+			category.show_in_nav,
+			category.sort_order
+		FROM
+			goods,
+			brand,
+			category
+					
+		<where>
+			<include refid="query_goods_where"></include>
+		</where>
+			
+	</select>
+	
+	<sql id="query_goods_where">
+		<if test="category!=null">
+			<if test="category.cat_name!=null and category.cat_name!=''">
+				and category.cat_name = #{category.cat_name}
+			</if>
+		</if>
+		<if test="brand!=null">
+			<if test="brand.brand_name!=null and brand.brand_name!=''">
+				and brand.brand_name = #{brand.brand_name}
+			</if>
+		</if>
+				and goods.goods_id = category.cat_id and goods.goods_id = brand.brand_id			
+	</sql>
+
+</mapper>
+

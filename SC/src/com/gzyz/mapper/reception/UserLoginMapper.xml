@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.reception.UserLoginMapper">
+	
+	<select id="countUsername" parameterType="string" resultType="int" >
+		select count(*) from user u
+		where user_name = #{user_name}
+	</select>
+	
+	<insert id="insertUsername" parameterType="InsertInfo">
+		insert into user (user_name,user_tele,user_password) VALUES(#{user_name},#{user_tele},#{user_password})
+	</insert>
+</mapper>

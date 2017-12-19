@@ -1,0 +1,349 @@
+.container{
+	
+	width:75%;
+}
+.item{
+	clear:both;
+	margin:20px 1px;
+	background-color: #FCFCFC; 
+	width:100%;
+	height:120px;
+	border:1px solid #CCCCCC;
+}
+.item-content{
+	list-style: none;
+	margin-top:10px;
+	
+}
+.top-item{
+	
+	list-style: none;
+}
+.top-item .td{
+	float: left;
+   	margin-left:40px;
+   	font-size:14px;
+}
+.tdprice{
+	float: left;
+   	margin-left:10px;
+   	font-size:14px;
+}
+.top-item .td1{
+	
+	float: left;
+   	margin-left:10px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-item .td2{
+	float: left;
+   	margin-left:130px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-item .td3{
+	float: left;
+   	margin-left:235px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-item .td4{
+	float: left;
+   	margin-left:133px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-item .td6{
+	float: left;
+   	margin-left:110px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-item .td5{
+	float: left;
+   	margin-left:70px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-bottom{
+	list-style: none;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+.top-bottom .td1{
+	margin-top:11px;
+	float: left;
+   	margin-left:10px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-bottom .td2{
+	margin-top:11px;
+	float: left;
+   	margin-left:20px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-bottom .td3{
+	margin-top:11px;
+	float: left;
+   	margin-left:20px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-bottom .td4{
+	margin-top:11px;
+	float: left;
+   	margin-left:350px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-bottom .td5{
+	margin-top:11px;
+	float: left;
+   	margin-left:30px;
+   	font-size:14px;
+   	line-height: 30px;
+}
+.top-bottom .td6{
+	
+	float: right;
+   	margin-left:59px;
+   	font-size:14px;
+   	line-height: 50px;
+}
+
+
+
+
+.item-content .td {
+    float: left;
+   	margin-left:40px;
+   	font-size:14px;
+}
+.item-content .checkbox1{
+	float: left;
+	margin-left:10px;
+}
+.item-content .tdimag{
+	float: left;
+	margin-left:10px;
+}
+.tdimag a:hover{
+	color: #FF4462;
+	text-decoration:none;
+}
+.tdimag a{
+	color: #3C3C3C;
+}
+.spec{
+	float: left;
+   	margin-left:35px;
+   	font-size:14px;
+}
+.spec a:hover{
+	color: #FF4462;
+	text-decoration:none;
+}
+.spec a{
+	color: #3C3C3C;
+}
+
+
+a{
+text-decoration:none;
+}
+.shanchu a:hover{
+	color: #FF4462;
+	
+}
+.headers{
+	clear:both;
+	width:100%;
+	margin-top:10px;
+	border-bottom:1px solid red;
+	height:50px;
+}
+.headers .p1{
+	font-size:25px;
+	color: #FF4400;
+}
+
+
+
+
+
+.gw_num{
+	border: 1px solid #dbdbdb;
+	width: 110px;
+	line-height: 26px;
+	overflow: hidden;
+}
+.gw_num em{
+	display: block;
+	height: 26px;
+	width: 26px;
+	float: left;
+	color: #7A7979;
+	border-right: 1px solid #dbdbdb;
+	text-align: center;
+	cursor: pointer;
+}
+.gw_num .num{
+	display: block;
+	float: left;
+	text-align: center;
+	width: 52px;
+	font-style: normal;
+	font-size: 14px;
+	line-height: 24px;
+	border: 0;
+}
+.gw_num em.add{
+	float: right;
+	border-right: 0;
+	border-left: 1px solid #dbdbdb;
+}
+
+/*订单详情  */
+.table1{
+	width:100%;
+	/* font-size:14px; */
+}
+
+.thead1 hr{
+		border-bottom:2px solid red;
+}
+.thead1 .th1{
+	width:30%;
+	border-right:3px solid #FFFFFF;
+	text-align: center;
+}
+.thead1 .th2{
+	border-right:3px solid #FFFFFF;
+	width:18%;
+	text-align: center;
+	margin-left:3px;
+}
+.thead1 .th3{
+	border-right:3px solid #FFFFFF;
+	width:18%;
+	text-align: center;
+	
+	margin-left:3px;
+}
+
+.thead1 .th4{
+	border-right:3px solid #FFFFFF;
+	width:18%;
+	text-align: center;
+	margin-left:3px;
+}
+.thead1 .th5{
+	width:18%;
+	text-align: center;
+	margin-left:3px;
+}
+
+
+.tbodytr1{
+	height:100px;
+	background-color: #fffcf5;
+	width:100%;
+	margin-top:20px;
+	border-top:1px dashed #80B2FF;
+	font-size:14px;
+}
+.tbodytr1 td{
+		text-align: center;
+		
+}
+.tbodytr1 a:hover{
+	color:#FF4400;
+	
+}
+.tbodytr1 a{
+	color: #333333;
+	
+}
+.tbodytr2{
+	
+	height:50px;
+	background-color: #FBF6E5;
+	width:100%;
+	margin-top:20px;
+	border-top:2px solid #FFFFFF;
+	border-bottom:1px dashed #80B2FF;
+}
+.tbodytr2 td{
+	border:1px solid #FFFFFF;
+	font-size:14px;
+}
+.tbodytr3{
+	
+	height:50px;
+	background-color: #FCF1D6;
+	width:100%;
+	margin-top:20px;
+	border-bottom:1px dashed #80B2FF;
+}
+.btn-info:hover{
+
+	color: #3366CC;
+}
+.container span{
+	margin-left:8px;
+
+}
+.container_top{
+	width:95%;
+}
+
+.receiver_top{
+width:100%;
+
+}
+.receiver_top:hover{
+
+background-color: #F2F7FF;
+}
+
+.receiveraddress1{
+	height:20px;
+	width:100%;
+	margin-top:10px;
+	
+}
+.receiveraddress1 span{
+	color:#FE9126;
+	font-size:16px;
+}
+.receiveraddress2{
+	height:20px;
+	width:100%;
+	margin-top:10px;
+	font-size:14px;
+}
+.updateaddress{
+	float:right;
+}
+
+
+.nogoods{
+	width:30%;
+	margin-top:30px;
+}
+
+.form-div{
+	width:100%;
+	
+}
+.updateaddress a {
+	color: #FFFFFF;
+}
+.am-dimmer.am-active{
+	 opacity: 0; 
+}
+/*订单详情  */
+

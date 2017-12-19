@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.systemset.PayWayMapper">
+	
+	<select id="findPayWayList" parameterType="com.gzyz.bean.systemset.PayWay" resultType="com.gzyz.bean.systemset.PayWay">
+  		SELECT * FROM payway  
+  		<where>
+  			<include refid="query_payway_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="findPayWay" parameterType="com.gzyz.bean.systemset.PayWay" resultType="com.gzyz.bean.systemset.PayWay">
+  		SELECT * FROM payway  
+  		<where>
+  			<include refid="query_payway_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="deletePayWay" parameterType="com.gzyz.bean.systemset.PayWay">
+  		DELETE FROM payway   
+  		<where>
+  			<include refid="query_payway_where"></include>
+  		</where>
+  	</select>
+  	
+  	<select id="updataPayWay" parameterType="com.gzyz.bean.systemset.PayWay">
+  		update payway set payway_name = #{payway_name} where payway_id = #{payway_id}; 
+  	</select>
+  	
+  	<select id="addPayWay" parameterType="com.gzyz.bean.systemset.PayWay">
+  		<!-- insert into payway values (#{payway_id},#{payway_name},#{payway_http}); -->
+  		insert into payway values (payway_id,#{payway_name});
+  	</select>
+  	
+  	<sql id="query_payway_where">
+		<if test="payway_id!=null and payway_id!=''">
+			and  payway_id = #{payway_id}
+		</if>
+  		<if test="payway_name!=null and payway_name!=''">
+   			and payway_name = #{payway_name}
+   		</if>	
+   </sql>
+	
+</mapper>

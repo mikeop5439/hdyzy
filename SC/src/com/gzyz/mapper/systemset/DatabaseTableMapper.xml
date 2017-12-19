@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.systemset.DatabaseTableMapper">
+	
+	<select id="findDatabaseTable" parameterType="com.gzyz.bean.systemset.DatabaseTable" resultType="com.gzyz.bean.systemset.DatabaseTable">
+  		SELECT * FROM databasetable  
+
+  	</select>
+	
+</mapper>

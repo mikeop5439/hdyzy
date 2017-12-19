@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzyz.mapper.personcar.PersoncarMapper">
+<!-- 修改用户信息 -->
+<update id="updateUserInfo" parameterType="user">
+update user
+<set>
+      <if test="user_tele != null" >
+        user_tele = #{user_tele,jdbcType=VARCHAR},
+      </if>
+      <if test="user_sex != null" >
+        user_sex = #{user_sex,jdbcType=INTEGER},
+      </if>
+      <if test="user_birthday != null" >
+        user_birthday = #{user_birthday,jdbcType=DATE},
+      </if>
+      <if test="user_age != null" >
+        user_age = #{user_age,jdbcType=INTEGER},
+      </if>
+      <if test="user_image != null" >
+        user_image = #{user_image,jdbcType=VARCHAR},
+      </if>
+      <if test="user_interest != null" >
+        user_interest = #{user_interest,jdbcType=VARCHAR},
+      </if>
+</set>
+where user_id=#{user_id}  
+</update>
+<!-- 验证原密码 -->
+<select id="queryOriginalPassword" parameterType="userNameAndUserPassword" resultType="int">
+select count(*) from user
+where user_name=#{user_name} and user_password=#{user_password}
+</select>
+<!-- 验证原密码 -->
+<update id="updatePassword" parameterType="user">
+update user
+set 
+user_password=#{user_password}
+where user_name=#{user_name}
+</update>
+<!--查询订单(order&user&order_details)-->
+<resultMap type="orderAndUserAndOrderDetails" id="queryOrders">
+		<id column="oid" property="order_id"/>
+		<result column="otime" property="order_time"/>
+		<result column="ostatus" property="order_status"/>
+		<result column="optime" property="pay_time"/>
+		<result column="osn" property="shipping_name"/>
+		<result column="osc" property="shipping_code"/>
+		<association property="user" javaType="user">
+			<id column="uid" property="user_id"/>
+			<result column="uname" property="user_name"/>
+		</association>
+		<collection property="order_details" ofType="order_details">
+		    <id column="did" property="order_details_id"/>
+		    <result column="dgid" property="goods_id"/>
+			<result column="dquantity" property="quantity"/>
+			<result column="dsprice" property="shop_price"/>
+			<result column="dgname" property="goods_name"/>
+			<result column="dtotalfree" property="total_fee"/>
+			<result column="doriginal_img" property="original_img"/>
+		</collection>
+</resultMap>
+<!-- 订单查询 -->
+<select id="queryTheOrder" resultMap="queryOrders" parameterType="usernameAndNowindex">
+SELECT o.order_id oid,o.user_id uid,u.user_name uname,o.order_time otime,o.order_status ostatus,o.pay_time optime,o.shipping_name osn,o.shipping_code osc,d.order_details_id did,d.goods_id dgid,d.quantity dquantity,d.shop_price dsprice,d.goods_name dgname,d.total_fee dtotalfree,d.original_img doriginal_img
+FROM `order` o 
+join order_details d 
+ON o.order_id=d.order_id 
+JOIN `user` u 
+ON o.user_id=u.user_id
+where o.order_id in (
+select t.order_id
+from(
+select order_id 
+FROM `order` o 
+JOIN `user` u 
+ON o.user_id=u.user_id
+where u.user_name=#{user_name}
+LIMIT #{nowindex},5
+)as t
+)
+</select>
+<!-- 查询用户订单数量 -->
+<select id="queryTheOrderCount" resultType="int" parameterType="usernameAndNowindex">
+select count(*)
+from `order` o
+JOIN `user` u 
+ON o.user_id=u.user_id
+where u.user_name=#{user_name}
+</select>
+<!-- 确认收货 -->
+<update id="comfirm" parameterType="orderIdAndUser">
+update `order`
+set 
+order_status = 3
+where user_id=#{user_id} and order_id=#{order_id}
+</update>
+<!-- 申请售后 -->
+<insert id="applyinvoice" parameterType="applyInvoiceAndDate">
+insert into order_invoice(order_id,apply_reason,apply_time) VALUES(#{order_id},#{apply_reason},#{apply_time})
+</insert>
+<update id="applyinvoicestatus" parameterType="int">
+update `order`
+set 
+order_status = 4
+where order_id=#{order_id}
+</update>
+</mapper>
