@@ -29,13 +29,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 .clearfix{display:block;}/* End hide from IE-mac */
 *+html .clearfix{min-height:1%;}
 /* lanrenzhijia */
-.lanrenzhijia{width:1250px;margin-left: 20px; overflow:hidden;}
+.lanrenzhijia{width:100%; overflow:hidden;}
 .lanrenzhijia ul{width:1000px;margin: 0 auto}
-.lanrenzhijia ul li{float:left;margin-bottom:0px;display:inline;width:400px;height:200px;overflow:hidden;position:relative;}
-.lanrenzhijia ul li .photo{width:400px;height:200px;overflow:hidden;}
-.lanrenzhijia .rsp{width:400px;height:200px;overflow:hidden;position: absolute;background:#000;top:0px;left:0px;}
-.lanrenzhijia .text{position:absolute;width:400px;height:430px;left:-300px;top:0px;overflow:hidden;}
-.lanrenzhijia .text h3{width:400px;margin-top:100px;height:50px;line-height:50px;text-align:center;color:#FFFFFF;font-size:20px;}
+.lanrenzhijia ul li{float:left; display:inline;width:500px;height:200px;overflow:hidden;position:relative;}
+.lanrenzhijia ul li .photo{width:500px;height:200px;margin: 0 auto;overflow:hidden;}
+.lanrenzhijia .rsp{width:500px;height:200px;overflow:hidden;position: absolute;background:#000;top:0px;left:0px;}
+.lanrenzhijia .text{position:absolute;width:500px;height:430px;left:-300px;top:0px;overflow:hidden;}
+.lanrenzhijia .text h3{width:500px;margin-top:100px;height:50px;line-height:50px;text-align:center;color:#FFFFFF;font-size:20px;}
 .lanrenzhijia .text a{text-decoration:none}
 .lanrenzhijia .text div{text-align:center;color:#FFFFFF;font-size:18px;}		
 </style>

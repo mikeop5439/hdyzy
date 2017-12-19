@@ -532,10 +532,11 @@ var music = document.getElementById('bg-music');
                             <div class="gallery-item-box row">
                                 <div class="col-md-4 col-sm-6 col-xs-12 gallery-item desert drink mb-30" >
                                     <div class="single-item-gallery" >
+                                     
                                         <a href="${pageContext.request.contextPath}/JSP/RP/yangshen.jsp">
                                             <span class="plus" ><i class="fa fa-plus"></i></span>
                                         </a>
-                                        <img src="images/0044.jpg" alt="" height="270px" >
+                                        <img src="images/0044.jpg" alt=""  height="270px" class="img-responsive" >
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-sm-6 col-xs-12 gallery-item coffee catering mb-30">
@@ -543,7 +544,7 @@ var music = document.getElementById('bg-music');
                                         <a href="${pageContext.request.contextPath}/JSP/RP/yiliao.jsp">
                                             <span class="plus"><i class="fa fa-plus"></i></span>
                                         </a>
-                                        <img src="images/94.jpg" alt=""  height="270px">
+                                        <img src="images/94.jpg" alt=""  height="270px" class="img-responsive">
                                     </div>
                                 </div> 
                                 <div class="col-md-4 col-sm-6 col-xs-12 gallery-item desert drink mb-30">
@@ -551,7 +552,7 @@ var music = document.getElementById('bg-music');
                                         <a href="${pageContext.request.contextPath}/JSP/RP/jianshen.jsp">
                                             <span class="plus"><i class="fa fa-plus"></i></span>
                                         </a>	
-                                        <img src="images/0033.jpg" alt=""  height="270px">
+                                        <img src="images/0033.jpg" alt=""  height="270px" class="img-responsive">
                                     </div>
                                 </div>
                               
